@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Goal Ladder
+Comment=Goals that unlock one after another, with only the next step in focus
+Exec=goalladder
+Icon=goalladder
+Terminal=false
+Categories=Office;Utility;
+Keywords=goals;ladder;progress;plan;tracker;
+StartupWMClass=goalladder

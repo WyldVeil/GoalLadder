@@ -1,0 +1,26 @@
+# Maintainer: WyldVeil
+pkgname=goalladder-bin
+_pkgname=GoalLadder
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Goal Ladder: a simple goal tracker where each goal unlocks the next"
+arch=('x86_64')
+url="https://github.com/WyldVeil/GoalLadder"
+license=('MIT')
+depends=('webkit2gtk-4.1' 'gtk3')
+provides=('goalladder')
+conflicts=('goalladder')
+source=("${_pkgname}-${pkgver}-x86_64.tar.gz::${url}/releases/download/v${pkgver}/${_pkgname}-${pkgver}-linux-x86_64.tar.gz")
+sha256sums=('SKIP')
+options=('!strip' '!debug')
+
+package() {
+  cd "$srcdir/${_pkgname}-${pkgver}"
+  install -Dm755 goalladder "$pkgdir/usr/bin/goalladder"
+  install -Dm644 goalladder.desktop "$pkgdir/usr/share/applications/goalladder.desktop"
+  for s in 32 64 128 256; do
+    install -Dm644 "icons/${s}x${s}.png" "$pkgdir/usr/share/icons/hicolor/${s}x${s}/apps/goalladder.png"
+  done
+  install -Dm644 icons/goalladder.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/goalladder.svg"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
