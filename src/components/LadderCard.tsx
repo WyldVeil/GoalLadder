@@ -17,6 +17,8 @@ interface Props {
 
 // With a long history, only the most recent reached step stays visible until expanded.
 const COLLAPSE_AFTER = 2;
+// Leaves the last reached step in view above the current one when a long list scrolls.
+const SCROLL_CONTEXT = 52;
 
 export default function LadderCard(p: Props) {
   const { ladder } = p;
@@ -26,9 +28,49 @@ export default function LadderCard(p: Props) {
   const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState("");
   const cancelled = useRef(false);
+  const list = useRef<HTMLOListElement>(null);
+  const [fade, setFade] = useState({ top: false, bottom: false });
+  const seen = useRef<{ reached: number; total: number } | null>(null);
 
   const hidden = !expanded && ladder.reached > COLLAPSE_AFTER ? ladder.reached - 1 : 0;
   const visible = ladder.rungs.slice(hidden);
+
+  const updateFade = () => {
+    const el = list.current;
+    if (!el) return;
+    const top = el.scrollTop > 2;
+    const bottom = el.scrollTop + el.clientHeight < el.scrollHeight - 2;
+    setFade((f) => (f.top === top && f.bottom === bottom ? f : { top, bottom }));
+  };
+
+  useEffect(() => {
+    const el = list.current;
+    if (!el) return;
+    const ro = new ResizeObserver(updateFade);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Tall ladders scroll inside the card. Keep the current step in view when the card first
+  // shows and after each step is reached; show the new step when one is added to the end.
+  useEffect(() => {
+    const el = list.current;
+    const prev = seen.current;
+    seen.current = { reached: ladder.reached, total };
+    if (!el) return;
+    if (el.scrollHeight > el.clientHeight) {
+      // Smooth for short moves; a long glide through a big list feels slow, so jump instead.
+      const go = (top: number) =>
+        el.scrollTo({ top, behavior: prev && Math.abs(top - el.scrollTop) < 1200 ? "smooth" : "auto" });
+      if (prev && prev.reached === ladder.reached && total > prev.total) {
+        go(el.scrollHeight - el.clientHeight);
+      } else if (!prev || prev.reached !== ladder.reached) {
+        const cur = el.querySelector<HTMLElement>(".rung.current");
+        if (cur) go(Math.max(0, cur.offsetTop - SCROLL_CONTEXT));
+      }
+    }
+    updateFade();
+  }, [ladder.reached, total]);
 
   const commitDraft = () => {
     const steps = splitSteps(draft);
@@ -62,7 +104,11 @@ export default function LadderCard(p: Props) {
         </div>
       )}
 
-      <ol className="rungs">
+      <ol
+        ref={list}
+        className={`rungs ${fade.top ? "fade-top" : ""} ${fade.bottom ? "fade-bottom" : ""}`}
+        onScroll={updateFade}
+      >
         {hidden > 0 && (
           <li className="rung reached collapsed">
             <div className="rail">

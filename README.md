@@ -21,6 +21,7 @@ A ladder can be a single step if you just want a plain goal. Ladders can have an
 - **Add a step** at the bottom of each card adds a new step to the top of that ladder.
 - The **...** menu on each card lets you edit steps, reorder ladders, or delete one.
 - Finished ladders move into a Completed section at the bottom.
+- Long ladders scroll inside their card, and the card keeps the step you are on in view.
 
 ## Installing
 

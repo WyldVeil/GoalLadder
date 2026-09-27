@@ -312,9 +312,44 @@ main {
 /* ---------- rungs ---------- */
 
 .rungs {
+  --fade-top: 0px;
+  --fade-bottom: 0px;
+  position: relative;
   list-style: none;
-  margin: 0;
-  padding: 0;
+  max-height: min(560px, 62vh);
+  overflow-y: auto;
+  /* room for the glow on the current step and the node ring, which the scroll box would clip */
+  margin: -4px -10px 0 -6px;
+  padding: 4px 10px 0 6px;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--fade-top),
+    #000 calc(100% - var(--fade-bottom)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--fade-top),
+    #000 calc(100% - var(--fade-bottom)),
+    transparent 100%
+  );
+}
+.rungs.fade-top {
+  --fade-top: 36px;
+}
+.rungs.fade-bottom {
+  --fade-bottom: 36px;
+}
+.rungs::-webkit-scrollbar {
+  width: 8px;
+}
+.rungs::-webkit-scrollbar-thumb {
+  background: var(--n3);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+  border-radius: 8px;
 }
 
 .rung {
