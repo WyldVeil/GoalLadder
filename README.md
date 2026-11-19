@@ -1,5 +1,7 @@
 # Goal Ladder
 
+[![Found it useful? Buy me a coffee](https://img.shields.io/badge/Found_it_useful%3F-Buy_me_a_coffee-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/wyldveil)
+
 A small desktop app for goals that lead to other goals. You write down what you are working toward, and if it leads somewhere, you add what comes after it. Only the next step is in focus. Everything further up the ladder stays visible but locked until you get there.
 
 It has no dates, no reminders and no accounts. Your goals are kept in one file on your own machine.
